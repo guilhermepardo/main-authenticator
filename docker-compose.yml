@@ -19,10 +19,6 @@ services:
     networks:
       - default
     restart: always
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      timeout: 20s
-      retries: 10
     ports:
       - 3306:3306
 
@@ -34,11 +30,8 @@ services:
       - "3003:80"
     environment:
       PMA_HOST: mysqldb
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost"]
-      interval: 1m30s
-      timeout: 20s
-      retries: 3
+    networks:
+      - default
     depends_on:
       - mysqldb
 
@@ -53,26 +46,6 @@ services:
     networks:
       - default
 
-  mongo:
-    container_name: mongo
-    image: mongo:6.0.10
-    volumes:
-      - mongodriver:/data
-    ports:
-      - 27017:27017
-    restart: always
-    networks:
-      - default
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: root
-    healthcheck:
-      test: echo 'db.runCommand("ping").ok' | mongo mongo:27017/test --quiet
-      interval: 10s
-      timeout: 10s
-      retries: 5
-
 volumes:
   mysqldriver:
-  mongodriver:
   redisdriver:
