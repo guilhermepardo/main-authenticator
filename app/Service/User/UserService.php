@@ -4,23 +4,20 @@ namespace App\Service\User;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rules\Password;
 
-class UserService {
+class UserService
+{
 
     protected $model;
-    
-    const REGISTER_REQ_PARAMS_RULES = [
-        'firstName' => 'required',
-        'lastName' => 'required',
-        'username' => 'required|unique:users',
-        'email' => 'required|email|unique:users',
-        'password' => 'required',
-    ];
-    public function __construct() {
+
+    public function __construct()
+    {
         $this->model = new User();
     }
 
-    public function createNewUser(Request $request):void {
+    public function createNewUser(Request $request): void
+    {
         try {
 
             $this->model->first_name = $request->firstName;
@@ -28,11 +25,29 @@ class UserService {
             $this->model->username = $request->username;
             $this->model->email = $request->email;
             $this->model->password = \Hash::make($request->password);
-    
+
             $this->model->save();
         } catch (\Exception $e) {
             throw $e;
         }
+    }
+
+    public function registerRequestRules(): array
+    {
+        return [
+            'firstName' => 'required',
+            'lastName' => 'required',
+            'username' => 'required|unique:users',
+            'email' => 'required|email|unique:users',
+            'password' => [
+                'required',
+                Password::min(8)
+                    ->letters()
+                    ->mixedCase()
+                    ->numbers()
+            ],
+            'passwordConfirmation' => 'required|same:password',
+        ];
     }
 
 }

@@ -19,7 +19,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         try {
-            $validator = \Validator::make($request->all(), $this->service::REGISTER_REQ_PARAMS_RULES);
+            $validator = \Validator::make($request->all(), $this->service->registerRequestRules());
 
             if ($validator->fails()) {
                 return response()->json(['errors' => $validator->errors()], Response::HTTP_BAD_REQUEST);
