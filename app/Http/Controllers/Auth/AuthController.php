@@ -36,4 +36,9 @@ class AuthController extends Controller
         ]);
     }
 
+    public function myUser()
+    {
+        return response()->json(Auth::user(), Response::HTTP_OK);
+    }
+
 }
