@@ -12,4 +12,6 @@ Route::prefix('auth')->group(function () {
 
     Route::post('/login', 'App\Http\Controllers\Auth\AuthController@login')->name('auth.login');
 
+    Route::get('/user', 'App\Http\Controllers\Auth\AuthController@myUser')->name('auth.user')->middleware('auth');
+
 });
